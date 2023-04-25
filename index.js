@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+const cors = require("cors");
 const morgan = require("morgan");
 var logger = morgan("tiny");
 
@@ -10,6 +11,7 @@ const requestLogger = (request, response, next) => {
   console.log("---");
   next();
 };
+
 const unknownEndpoint = (request, response) => {
   response.status(404).send({ error: "unknown endpoint" });
 };
@@ -23,6 +25,7 @@ app.use(express.json());
 app.use(
   morgan(":method :url :status :res[content-length] :response-time :body")
 );
+app.use(cors());
 
 let persons = [
   {
