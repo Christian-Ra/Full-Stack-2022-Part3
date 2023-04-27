@@ -4,28 +4,29 @@
     "description": "Phonebook app for Part 3 exercises",
     "main": "index.js",
     "scripts": {
-      "start": "node index.js",
-      "dev": "nodemon index.js",
-      "test": "echo \"Error: no test specified\" && exit 1",
-      "build:ui": "rm -rf build && cd C:/Users/chrra/Programming/FullStack_2022/Part_2/exercises/phonebook && npm run build && cp -r build C:/Users/chrra/Programming/CS_440/Labs/Full-Stack-2022-Part3/phonebook",
-      "build:full": "npm run build:ui && git add . && git commit -m uibuild && git push" 
+        "start": "node index.js",
+        "dev": "nodemon index.js",
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "build:ui": "rm -rf build && cd C:/Users/chrra/Programming/FullStack_2022/Part_2/exercises/phonebook && npm run build && cp -r build C:/Users/chrra/Programming/CS_440/Labs/Full-Stack-2022-Part3/phonebook",
+        "build:full": "npm run build:ui && git add . && git commit -m uibuild && git push"
     },
     "repository": {
-      "type": "git",
-      "url": "git+https://github.com/Christian-Ra/Full-Stack-2022-Part3.git"
+        "type": "git",
+        "url": "git+https://github.com/Christian-Ra/Full-Stack-2022-Part3.git"
     },
     "author": "Christian Razo",
     "license": "ISC",
     "bugs": {
-      "url": "https://github.com/Christian-Ra/Full-Stack-2022-Part3/issues"
+        "url": "https://github.com/Christian-Ra/Full-Stack-2022-Part3/issues"
     },
     "homepage": "https://github.com/Christian-Ra/Full-Stack-2022-Part3#readme",
     "dependencies": {
-      "cors": "^2.8.5",
-      "express": "^4.18.2",
-      "morgan": "^1.10.0"
+        "cors": "^2.8.5",
+        "express": "^4.18.2",
+        "mongoose": "^7.1.0",
+        "morgan": "^1.10.0"
     },
     "devDependencies": {
-      "nodemon": "^2.0.22"
+        "nodemon": "^2.0.22"
     }
-  }
+}
