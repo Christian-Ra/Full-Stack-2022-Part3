@@ -1,16 +1,27 @@
+require("dotenv").config();
+const Person = require("./models/person");
+
 const express = require("express");
 const app = express();
 const cors = require("cors");
 const morgan = require("morgan");
+const mongoose = require("mongoose");
 var logger = morgan("tiny");
 
-const requestLogger = (request, response, next) => {
-  console.log("Method:", request.method);
-  console.log("Path :", request.path);
-  console.log("Body :", request.body);
-  console.log("---");
-  next();
-};
+mongoose.set("strictQuery", false);
+
+const personSchema = new mongoose.Schema({
+  name: String,
+  important: Boolean,
+});
+
+personSchema.set("toJSON", {
+  transform: (document, returnedObject) => {
+    returnedObject.id = returnedObject._id.toString();
+    delete returnedObject._id;
+    delete returnedObject.__v;
+  },
+});
 
 const unknownEndpoint = (request, response) => {
   response.status(404).send({ error: "unknown endpoint" });
@@ -51,13 +62,10 @@ let persons = [
   },
 ];
 
-const generateId = () => {
-  return Math.floor(Math.random() * 100000);
-};
-
 app.get("/api/persons", (request, response) => {
-  console.log("Testing changes");
-  response.json(persons);
+  Person.find({}).then((notes) => {
+    response.json(notes);
+  });
 });
 
 app.get("/api/info", (request, response) => {
@@ -75,22 +83,14 @@ app.post("/api/persons", (request, response) => {
     });
   }
 
-  const existingContact = persons.find((p) => p.name === body.name);
-
-  if (existingContact) {
-    return response.status(400).json({
-      error: "Name already exists in contact",
-    });
-  }
-  const person = {
+  const person = new Person({
     name: body.name,
     number: body.number,
-    id: generateId(),
-  };
+  });
 
-  persons = persons.concat(person);
-
-  response.json(person);
+  person.save().then((savedPerson) => {
+    response.json(savedPerson);
+  });
 });
 
 app.get("/api/persons/:id", (request, response) => {

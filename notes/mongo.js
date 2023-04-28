@@ -14,14 +14,14 @@ mongoose.connect(url);
 
 const noteSchema = new mongoose.Schema({
   content: String,
-  improtant: Boolean,
+  important: Boolean,
 });
 
 const Note = mongoose.model("Note", noteSchema);
 
 const note = new Note({
-  content: "Boy do I appreciate me some Jazz",
-  improtant: true,
+  content: "This user listens to radiohead unironically sometimes. Yikes.",
+  important: true,
 });
 
 //? THe objects are retrieved from the database with the find method of the Note model. The parameter of the method
