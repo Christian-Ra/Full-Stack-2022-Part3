@@ -4,10 +4,35 @@ console.log("hello world");
 const express = require("express");
 const app = express();
 const cors = require("cors");
+const mongoose = require("mongoose");
+const note = require("./models/note");
+
+//TODO Delete before commiting  to Github, move to system variable
+const password = "268EhBHSTyK0BnGp";
 
 app.use(express.json());
 app.use(cors());
 app.use(express.static("build"));
+
+const url = `mongodb+srv://razochr:${password}@cluster0.a3ryfck.mongodb.net/noteapp?retryWrites=true&w=majority`;
+
+mongoose.set("strictQuery", false);
+mongoose.connect(url);
+
+const noteSchema = new mongoose.Schema({
+  content: String,
+  important: Boolean,
+});
+
+noteSchema.set("toJSON", {
+  transform: (document, returnedObject) => {
+    returnedObject.id = returnedObject._id.toString();
+    delete returnedObject._id;
+    delete returnedObject.__v;
+  },
+});
+
+const Note = mongoose.model("Note", noteSchema);
 
 let notes = [
   {
@@ -33,8 +58,14 @@ app.get("/", (request, response) => {
   //! value of the Content-Type header to be text/html
 });
 
+// app.get("/api/notes", (request, response) => {
+//   response.json(notes);
+// });
+
 app.get("/api/notes", (request, response) => {
-  response.json(notes);
+  Note.find({}).then((notes) => {
+    response.json(notes);
+  });
 });
 
 const generateId = () => {
