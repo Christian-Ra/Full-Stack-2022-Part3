@@ -36,15 +36,19 @@ app.use(cors());
 app.use(express.static("build"));
 
 app.get("/api/persons", (request, response) => {
-  Person.find({}).then((notes) => {
-    response.json(notes);
+  Person.find({}).then((persons) => {
+    response.json(persons);
   });
 });
 
 app.get("/api/info", (request, response) => {
   console.log("routing to info");
   const date = new Date();
-  response.send(`Phonebook has info for ${persons.length} people ${date}`);
+  Person.find({}).then((persons) => {
+    response.send(
+      `Retrieving info for ${persons.length} persons retrieved on ${date}`
+    );
+  });
 });
 
 app.post("/api/persons", (request, response, next) => {
@@ -86,13 +90,28 @@ app.delete("/api/persons/:id", (request, response, next) => {
     .catch((error) => next(error));
 });
 
+app.put("/api/persons/:id", (request, response, next) => {
+  const body = request.body;
+
+  const person = {
+    name: body.name,
+    number: body.number,
+  };
+
+  Person.findByIdAndUpdate(request.params.id, person, { new: true })
+    .then((updatedPerson) => {
+      response.json(updatedPerson);
+    })
+    .catch((error) => next(error));
+});
+
 const unknownEndpoint = (request, response) => {
   response.status(404).send({ error: "unknown endpoint" });
 };
 
 app.use(unknownEndpoint);
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`Server running on ${PORT}`);
 });
