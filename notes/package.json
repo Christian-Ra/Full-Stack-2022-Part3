@@ -8,7 +8,8 @@
     "dev": "nodemon index.js",
     "build:ui": "rm -rf build && cd C:/Users/chrra/Programming/FullStack_2022/Part_2/notes/collections && npm run build && cp -r build C:/Users/chrra/Programming/CS_440/Labs/Full-Stack-2022-Part3/notes",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build:full": "npm run build:ui && git add . && git commit -m uibuild && git push"
+    "build:full": "npm run build:ui && git add . && git commit -m uibuild && git push",
+    "lint": "eslint ."
   },
   "author": "Christian Razo",
   "license": "MIT",
@@ -19,6 +20,10 @@
     "mongoose": "^7.0.5"
   },
   "devDependencies": {
-    "nodemon": "^2.0.20"
+    "eslint": "^8.39.0",
+    "eslint-config-prettier": "^8.8.0",
+    "nodemon": "^2.0.20",
+    "prettier": "^2.8.8",
+    "prettier-eslint": "^15.0.1"
   }
 }
