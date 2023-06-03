@@ -3,7 +3,7 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const mongoose = require("mongoose");
-const Blog = require("../models/blog");
+const Blog = require("../blogs/models/blog");
 const url = process.env.MONGODB_URI;
 
 mongoose.connect(url);
