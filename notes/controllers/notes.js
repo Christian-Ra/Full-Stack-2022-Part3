@@ -1,13 +1,13 @@
 const notesRouter = require('express').Router()
 const Note = require('../models/note')
 
-notesRouter.get('/notes', (request, response) => {
+notesRouter.get('/', (request, response) => {
   Note.find({}).then((notes) => {
     response.json(notes)
   })
 })
 
-notesRouter.post('/notes', (request, response, next) => {
+notesRouter.post('/', (request, response, next) => {
   const body = request.body
 
   if (!body.content) {

@@ -1,0 +1,9 @@
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+
+{
+    "title": "I am a puts debugger",
+    "author": "Aaron Patterson",
+    "url": "https://tenderlovemaking.com/2016/02/05/i-am-a-puts-debuggerer.html",
+    "likes": 218 
+}
