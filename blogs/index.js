@@ -4,13 +4,21 @@ const app = express();
 const cors = require("cors");
 const mongoose = require("mongoose");
 const Blog = require("../blogs/models/blog");
-const url = process.env.MONGODB_URI;
+const config = require("./utils/config");
+const url = config.MONGODB_URI;
+// const app = require("./app");
+const logger = require("./utils/logger");
+const middleware = require("./utils/middleware");
 
 mongoose.connect(url);
 
 app.use(cors());
 
 app.use(express.json());
+app.use(middleware.requestLogger);
+// app.listen(config.PORT, () => {
+//   logger.info(`Server running on port ${config.PORT}`);
+// });
 
 app.get("/api/blogs", (request, response) => {
   Blog.find({}).then((blogs) => {
@@ -38,26 +46,27 @@ app.post("/api/blogs", (request, response) => {
   });
 });
 
-const unknownEndpoint = (request, response) => {
-  response.status(404).send({ error: "unknown endpoint" });
-};
+// const unknownEndpoint = (request, response) => {
+//   response.status(404).send({ error: "unknown endpoint" });
+// };
 
-app.use(unknownEndpoint);
+// app.use(unknownEndpoint);
+app.use(middleware.unknownEndpoint);
 
-const PORT = process.env.PORT;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${process.env.PORT}`);
+app.listen(config.PORT, () => {
+  console.log(`Server running on port ${config.PORT}`);
 });
 
-const errorHandler = (error, request, response, next) => {
-  console.error(error.message);
+// const errorHandler = (error, request, response, next) => {
+//   console.error(error.message);
 
-  if (error.name === "CastError") {
-    return response.status(400).send({ error: "malformatted id" });
-  } else if (error.name === "ValidationError") {
-    return response.status(400).json({ error: error.message });
-  }
-  next(error);
-};
+//   if (error.name === "CastError") {
+//     return response.status(400).send({ error: "malformatted id" });
+//   } else if (error.name === "ValidationError") {
+//     return response.status(400).json({ error: error.message });
+//   }
+//   next(error);
+// };
 
-app.use(errorHandler);
+// app.use(errorHandler);
+app.use(middleware.unknownEndpoint);
