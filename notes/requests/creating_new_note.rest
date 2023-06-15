@@ -1,7 +1,9 @@
 POST http://localhost:3001/api/notes
 Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjY0ODkxZDc4NzZkZWJhOWNjMTA0ZGFmNCIsImlhdCI6MTY4Njc4MDM5Mn0.seAZDwgrkm_hbnctok66ltPyMFHQclMJCtlGHDgH_NM
 
 {
-    "content": "Ensure that everything still works",
-    "important": true
+    "content": "The existing code and tests need to be changed when user is added to system",
+    "important": true,
+    "userId": "64891d7876deba9cc104daf4" 
 }
