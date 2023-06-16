@@ -60,8 +60,8 @@ describe('when there is initially one user in db', () => {
     const usersAtEnd = await helper.usersInDb()
     expect(usersAtEnd).toEqual(usersAtStart)
   })
+})
 
-  afterAll(async () => {
-    await mongoose.connection.close()
-  })
+afterAll(async () => {
+  await mongoose.connection.close()
 })
