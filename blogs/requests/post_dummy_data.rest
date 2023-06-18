@@ -2,8 +2,9 @@ POST http://localhost:3003/api/blogs
 Content-Type: application/json
 
 {
-    "title": "I am a puts debugger",
-    "author": "Aaron Patterson",
-    "url": "https://tenderlovemaking.com/2016/02/05/i-am-a-puts-debuggerer.html",
-    "likes": 218 
+    "title": "The Unsolved Mystery of Europe's Oldest Language",
+    "author": "Tim Brinkhof",
+    "url": "https://bigthink.com/high-culture/basque-euskara-spain/?utm_source=pocket-newtab",
+    "userId": "648f2db02d64d330c182fe00",
+    "likes": 12 
 }
