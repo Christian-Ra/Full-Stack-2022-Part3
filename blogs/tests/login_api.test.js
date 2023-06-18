@@ -11,11 +11,14 @@ describe("when there is initially one user in db", () => {
     await User.deleteMany({});
 
     const passwordHash = await bcrypt.hash("secreto", 10);
-    const user = new User({ username: "root", passwordHash });
+    const user = new User({
+      username: "root",
+      name: "Superuser",
+      passwordHash,
+    });
 
     await user.save();
   });
-
   test("creation succeeds with a fresh username", async () => {
     const usersAtStart = await helper.usersInDb();
 
@@ -59,6 +62,7 @@ describe("when there is initially one user in db", () => {
     expect(usersAtEnd).toEqual(usersAtStart);
   });
 });
+
 describe("When an invalid username/password is given on user creation", () => {
   test("Creation fails with proper statuscode if username is invalid", async () => {
     const usersAtStart = await helper.usersInDb();
@@ -107,6 +111,40 @@ describe("When an invalid username/password is given on user creation", () => {
   });
 });
 
+describe("when a user tries to log in", () => {
+  test("User login is successful when given correct user/password combination", async () => {
+    const superUser = {
+      username: "root",
+      password: "secreto",
+    };
+
+    result = await api.post("/api/login").send(superUser).expect(200);
+
+    const returnedUser = result.body.username;
+
+    expect(returnedUser).toEqual(superUser.username);
+  });
+
+  test("User login is unsuccessful when invalid credentials are given", async () => {
+    const invalidPass = {
+      username: "root",
+      password: "wrongPassword",
+    };
+
+    result = await api.post("/api/login").send(invalidPass).expect(401);
+
+    expect(result.body.error).toContain("invalid username or password");
+
+    const invalidUser = {
+      username: "crustyrazor",
+      password: "salainen",
+    };
+
+    result = await api.post("/api/login").send(invalidUser).expect(401);
+
+    expect(result.body.error).toContain("invalid username or password");
+  });
+});
 afterAll(async () => {
   await mongoose.connection.close();
 });
