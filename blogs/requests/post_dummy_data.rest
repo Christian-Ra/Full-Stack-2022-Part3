@@ -1,10 +1,11 @@
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
+Authorization: bearer <token>
 
 {
-    "title": "The Unsolved Mystery of Europe's Oldest Language",
-    "author": "Tim Brinkhof",
-    "url": "https://bigthink.com/high-culture/basque-euskara-spain/?utm_source=pocket-newtab",
+    "title": "A Love Letter to Driving Alone",
+    "author": "Jamie Feldmar",
+    "url": "https://getpocket.com/explore/item/a-love-letter-to-driving-alone?utm_source=pocket-newtab",
     "userId": "648f2db02d64d330c182fe00",
-    "likes": 12 
+    "likes": 91 
 }

@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const helper = require("../utils/list_helper.js");
 const app = require("../app");
 const api = supertest(app);
+const testHelper = require("./test_helper.js");
 const User = require("../models/user.js");
 
 describe("when there is initially one user in db", () => {
@@ -143,6 +144,37 @@ describe("when a user tries to log in", () => {
     result = await api.post("/api/login").send(invalidUser).expect(401);
 
     expect(result.body.error).toContain("invalid username or password");
+  });
+});
+
+describe("token is generated and used for authorizaiton for posting blogs", () => {
+  test("User is able to post a new blog once logged in", async () => {
+    //get userid for post request
+    const user = await testHelper.usersInDb();
+    const userId = user[0].id;
+
+    const superUser = {
+      username: "root",
+      password: "secreto",
+    };
+    //login first to generate token for creating blog request
+    const result = await api.post("/api/login").send(superUser).expect(200);
+
+    const userToken = result.body.token;
+
+    const newBlog = {
+      title: "The Unsolved Mystery of Europe's Oldest Language",
+      author: "Tim Brinkhof",
+      url: "https://bigthink.com/high-culture/basque-euskara-spain/?utm_source=pocket-newtab",
+      user: userId,
+      likes: 29,
+    };
+
+    await api
+      .post("/api/blogs")
+      .send(newBlog)
+      .set("Authorization", `bearer ${userToken}`)
+      .expect(200);
   });
 });
 afterAll(async () => {
