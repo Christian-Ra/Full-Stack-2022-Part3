@@ -176,7 +176,66 @@ describe("token is generated and used for authorizaiton for posting blogs", () =
       .set("Authorization", `bearer ${userToken}`)
       .expect(200);
   });
+
+  test("Deletion can only be done by user who added blog, requiring token authorization", async () => {
+    const user = await testHelper.usersInDb();
+    const userId = user[0].id;
+
+    const superUser = {
+      username: "root",
+      password: "secreto",
+    };
+    //login first to generate token for creating blog post
+
+    const result = await api.post("/api/login").send(superUser).expect(200);
+    const validToken = result.body.token;
+    console.log("valid token", validToken);
+
+    //create invalid user to ensure request does not process without porper authorization
+    const unauthorizedUser = {
+      username: "crustyrazor",
+      name: "Christian Razo",
+      password: "gioooooooo",
+    };
+
+    await api.post("/api/users").send(unauthorizedUser).expect(201);
+
+    const invalidResult = await api
+      .post("/api/login")
+      .send({ username: "crustyrazor", password: "gioooooooo" })
+      .expect(200);
+    const invalidToken = invalidResult.body.token;
+    console.log("invalid token", invalidToken);
+
+    const newBlog = {
+      title: "The Unsolved Mystery of Europe's Oldest Language",
+      author: "Tim Brinkhof",
+      url: "https://bigthink.com/high-culture/basque-euskara-spain/?utm_source=pocket-newtab",
+      user: userId,
+      likes: 29,
+    };
+    const postedBlog = await api
+      .post("/api/blogs")
+      .send(newBlog)
+      .set("Authorization", `bearer ${validToken}`)
+      .expect(200);
+
+    //test deletion with invalid token
+    const failedResult = await api
+      .delete(`/api/blogs/${postedBlog.body.id}`)
+      .set("Authorization", `bearer ${invalidToken}`)
+      .expect(401);
+
+    expect(failedResult.body.error).toContain("unauthorized token used");
+
+    await api
+      .delete(`/api/blogs/${postedBlog.body.id}`)
+      .set("Authorization", `bearer ${validToken}`)
+      .expect(204);
+  });
 });
+
 afterAll(async () => {
+  console.log("closing...");
   await mongoose.connection.close();
 });
