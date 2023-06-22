@@ -12,6 +12,19 @@ const User = require("../models/user");
 //   },
 // ];
 
+const users = [
+  {
+    username: "root",
+    name: "superUser",
+    password: "salainen",
+  },
+  {
+    username: "chrrazo",
+    name: "Christian Razo",
+    password: "balegda",
+  },
+];
+
 const blogs = [
   {
     _id: "5a422a851b54a676234d17f7",
