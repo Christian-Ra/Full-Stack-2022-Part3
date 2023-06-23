@@ -35,7 +35,7 @@ const errorHandler = (error, request, response, next) => {
 const userExtractor = async (request, response, next) => {
   const authorization = request.get("authorization");
   if (!authorization || !authorization.startsWith("bearer ")) {
-    response.status(401).json({
+    return response.status(401).json({
       error: "Token missing from request",
     });
   }
