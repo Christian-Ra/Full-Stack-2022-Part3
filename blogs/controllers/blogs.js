@@ -1,16 +1,6 @@
 const blogsRouter = require("express").Router();
 const middleware = require("../utils/middleware");
-const User = require("../models/user");
 const Blog = require("../models/blog");
-const jwt = require("jsonwebtoken");
-
-// const getTokenFrom = (request) => {
-//   const authorization = request.get("authorization");
-//   if (authorization && authorization.startsWith("bearer ")) {
-//     return authorization.replace("bearer ", "");
-//   }
-//   return null;
-// };
 
 blogsRouter.get("/", async (request, response) => {
   const blogs = await Blog.find({}).populate("user", { username: 1, name: 1 });
@@ -31,12 +21,6 @@ blogsRouter.get("/:id", (request, response, next) => {
 
 blogsRouter.post("/", middleware.userExtractor, async (request, response) => {
   const body = request.body;
-
-  // const decodedToken = jwt.verify(request.token, process.env.SECRET);
-  // if (!decodedToken.id) {
-  //   return response.status(401).json({ error: "token invalid" });
-  // }
-
   const user = request.user;
 
   if (!body.title || !body.url) {
@@ -65,11 +49,6 @@ blogsRouter.delete(
   "/:id",
   middleware.userExtractor,
   async (request, response) => {
-    // const decodedToken = jwt.verify(request.token, process.env.SECRET);
-    // if (!decodedToken.id) {
-    //   return response.status(401).json({ error: "token invalid" });
-    // }
-
     const user = request.user;
     const blog = await Blog.findById(request.params.id);
 
@@ -82,22 +61,15 @@ blogsRouter.delete(
   }
 );
 
-blogsRouter.put("/:id", (request, response, next) => {
+blogsRouter.put("/:id", async (request, response, next) => {
   const { author, title, url, likes } = request.body;
-  const blog = {
-    author: author,
-    title: title,
-    url: url,
-    likes: likes,
-  };
-
-  Blog.findByIdAndUpdate(
+  const updatedBlog = await Blog.findByIdAndUpdate(
     request.params.id,
-    { blog },
+    { author, title, url, likes },
     { new: true, runValidators: true, context: "query" }
-  )
-    .then((updatedBlog) => response.json(updatedBlog))
-    .catch((error) => next(error));
+  );
+  await updatedBlog.populate("user", { username: 1, name: 1 });
+  response.json(updatedBlog);
 });
 
 module.exports = blogsRouter;

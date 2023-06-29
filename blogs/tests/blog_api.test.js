@@ -121,6 +121,7 @@ describe("data in db can be updated or removed", () => {
       author: blogToUpdate.author,
       title: blogToUpdate.title,
       url: blogToUpdate.url,
+      user: blogToUpdate.user,
       likes: blogToUpdate.likes + 1,
     };
 
