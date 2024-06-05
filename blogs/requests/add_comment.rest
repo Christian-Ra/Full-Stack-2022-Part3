@@ -1,0 +1,7 @@
+POST http://localhost:3003/api/blogs/648f2e6d2d64d330c182fe05/comments
+Content-Type: application/json
+Authorization: bearer <token>
+
+{
+    "comment": "Testing the addition of a seperate comment"
+}
